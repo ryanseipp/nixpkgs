@@ -50,8 +50,10 @@ dotnetBuildHook() {
         local -r projectFile="${1-}"
 
         local runtimeIdFlagsArray=()
-        if [[ $projectFile == *.csproj || -n ${dotnetSelfContainedBuild-} ]]; then
-            runtimeIdFlagsArray+=("--runtime" "$dotnetRuntimeId")
+        if [[ -z ${packNupkg+x} ]]; then
+            if [[ $projectFile == *.csproj || -n ${dotnetSelfContainedBuild-} ]]; then
+                runtimeIdFlagsArray+=("--runtime" "$dotnetRuntimeId")
+            fi
         fi
 
         dotnet build ${1+"$projectFile"} \

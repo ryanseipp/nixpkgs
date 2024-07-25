@@ -3,6 +3,8 @@ dotnetInstallHook() {
 
     runHook preInstall
 
+    set -x
+
     local -r hostRuntimeId=@runtimeId@
     local -r dotnetInstallPath="${dotnetInstallPath-$out/lib/$pname}"
     local -r dotnetBuildType="${dotnetBuildType-Release}"
@@ -37,8 +39,10 @@ dotnetInstallHook() {
         local -r projectFile="${1-}"
 
         runtimeIdFlagsArray=()
-        if [[ $projectFile == *.csproj || -n ${dotnetSelfContainedBuild-} ]]; then
-            runtimeIdFlagsArray+=("--runtime" "$dotnetRuntimeId")
+        if [[ -z ${packNupkg+x} ]]; then
+            if [[ $projectFile == *.csproj || -n ${dotnetSelfContainedBuild-} ]]; then
+                runtimeIdFlagsArray+=("--runtime" "$dotnetRuntimeId")
+            fi
         fi
 
         dotnet publish ${1+"$projectFile"} \
@@ -60,7 +64,6 @@ dotnetInstallHook() {
             --output "$out/share" \
             --configuration "$dotnetBuildType" \
             --no-build \
-            --runtime "$dotnetRuntimeId" \
             "${dotnetPackFlagsArray[@]}" \
             "${dotnetFlagsArray[@]}"
     }

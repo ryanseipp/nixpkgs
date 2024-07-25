@@ -64,6 +64,7 @@
 , runtimeDeps ? [ ]
   # The dotnet runtime ID. If null, fetch-deps will gather dependencies for all
   # platforms in meta.platforms which are supported by the sdk.
+  # This has no effect when `packNupkg=true`.
 , runtimeId ? null
 
   # Tests to disable. This gets passed to `dotnet test --filter "FullyQualifiedName!={}"`, to ensure compatibility with all frameworks.
